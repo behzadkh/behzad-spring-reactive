@@ -4,6 +4,7 @@ import com.behzad.spring.reactive.app.entities.Employee;
 import com.behzad.spring.reactive.app.services.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -17,6 +18,11 @@ public class EmployeeController {
     @GetMapping("/find/one")
     private Mono<Employee> getEmployeeById() {
         return employeeService.findOne();
+    }
+
+    @GetMapping("/find/one/db/{id}")
+    private Mono<Employee> getEmployeeById(@PathVariable Long id) {
+        return employeeService.findOneByDB(id);
     }
 
     @GetMapping("/all")
