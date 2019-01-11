@@ -17,7 +17,7 @@ import java.util.Random;
 public class EmployeeController {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     private Random random = new Random();
-    private Mono<Employee> employeeMono = null;
+
 
     @Autowired
     private EmployeeService employeeService;
@@ -34,16 +34,9 @@ public class EmployeeController {
 
     @GetMapping("/save")
     public Mono<Employee> save() {
-        count().subscribe(count -> {
-            logger.info("count = " + count);
-            if (count < 10) {
-                int r = random.nextInt(1000);
-                employeeMono = Mono.just(new Employee(null, "name" + r, "name" + r + "@gmail.com"))
-                        .flatMap(e -> this.employeeService.save(e));
-            }
-        });
-        return employeeMono;
+        return count().flatMap(this::apply);
     }
+
 
     @GetMapping("/count")
     public Mono<Long> count() {
@@ -54,5 +47,16 @@ public class EmployeeController {
     @GetMapping("/delete")
     public Flux<Void> deleteAll() {
         return employeeService.deleteAll();
+    }
+
+    private Mono<? extends Employee> apply(Long count) {
+        logger.info("count = " + count);
+        Mono<Employee> employeeMono = null;
+        if (count < 10) {
+            int r = random.nextInt(1000);
+            employeeMono = Mono.just(new Employee(null, "name" + r, "name" + r + "@gmail.com"))
+                    .flatMap(e -> this.employeeService.save(e));
+        }
+        return employeeMono;
     }
 }
