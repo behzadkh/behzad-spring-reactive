@@ -14,7 +14,7 @@ public class ConnectionFactoryConfiguration {
         PostgresqlConnectionConfiguration config =
                 PostgresqlConnectionConfiguration.builder()
                         .database("heroko_spring_db")
-                        .password("@777zzz@behzad@123456")
+                        .password("yourpassword")
                         .username("postgres")
                         .host("localhost")
                         .port(5432)
